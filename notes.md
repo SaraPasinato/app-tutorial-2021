@@ -6,6 +6,11 @@
 4. importare angular-fontawsome ![https://github.com/FortAwesome/angular-fontawesome]
 
 5. creare i sevizi : `ng g s(serices) _nomeDelSevizio`
+
+6. usiamo json-server per api : per installare `npm i json-server`
+7. per il server andare in package.json ed inserire negli script `"server":"json-server --watch db.json --port 5000"`
+8. crea db.json con i valori accordati nella root dir
+9. lancia `npm run server`
 ---
 
 ## Come passare i dati ad un component
@@ -60,5 +65,38 @@ export class ButtonComponent implements OnInit {
   ```ts
    toggleAddTask(){
     console.log("Toggle");
+  }
+  ```
+
+## come creare un servizio fake(tramite dati accordati)
+1. genera il servizio con il comando 
+2. sevizio.ts si importano le classi:
+   ```ts
+   import{Observable,of} from 'rxjs';
+   import { Task } from '../Task'
+   import { TASKS } from '../mock-tasks';
+   ```
+3. il metodo che accede ai dati accordati
+    ```ts
+     getTasks(): Observable<Task[]>{
+        const tasks=of( TASKS);
+        return tasks;
+          }
+    ```
+4. task.components.ts si elimina il mock tasks e si importa il taskSErvice
+5. nel costruttore si crea una istanza privata  ` constructor(private taskService: TaskService) { }`
+6. si inizializza ngOnInit
+  ```ts
+   this.taskService.getTasks().subscribe((tasks)=>this.tasks=tasks);
+  ```
+## come creare un servizio da api
+1. inserire service HttpClient,HttpHeaders from @angular/common/http
+2. inserire in app.moduler HttpClientModule e in import HttpClientModule
+3. inserire proprietà in service `private apiUrl='http://localhost:5000/tasks'`
+4. inserire nel costurttore la connessione http ` constructor(private http:HttpClient) { }`
+5. metodo getTask(): 
+  ```ts
+  getTasks(): Observable<Task[]>{
+    return this.http.get<Task[]>(this.apiUrl);
   }
   ```
