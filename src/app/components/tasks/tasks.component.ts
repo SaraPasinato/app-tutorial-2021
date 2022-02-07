@@ -19,6 +19,10 @@ export class TasksComponent implements OnInit {
     this.taskService.deleteTask(task).subscribe(()=>(this.tasks=this.tasks.filter(t=>t.id !== task.id)));
 
   }
-
+  toggleRemainder(task:Task){
+    task.remainder = !task.remainder;
+   // console.log(task.remainder);
+    this.taskService.updateTaskReminder(task).subscribe();
+  }
 
 }
